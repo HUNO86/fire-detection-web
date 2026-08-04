@@ -1,0 +1,14 @@
+model:
+  path: "models/best.pt"
+
+ip_webcam:
+  default_url: "http://185.144.75.107/mjpg/video.mjpg"
+
+images:
+  logo: "static/images/logo.png"
+  hero_bg: "static/images/hero-bg.jpg"
+
+server:
+  host: "0.0.0.0"
+  port: 7860
+  debug: false

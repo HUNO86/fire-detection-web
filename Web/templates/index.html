@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smoke & Fire Detection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="hero" id="hero"
+         {% if hero_bg_url %}style="background-image: url('{{ hero_bg_url }}');"{% endif %}>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            {% if logo_url %}
+            <img src="{{ logo_url }}" alt="Logo" class="hero-logo" onerror="this.style.display='none'">
+            {% endif %}
+            <h1>Smoke & Fire Detection</h1>
+            <p class="subtitle">YOLOv26 Real-Time Detection System</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-layout">
+            
+            <div class="left-column">
+                <div class="video-container" id="video-container" style="display:none;">
+                    <div class="video-frame">
+                        <img id="video-feed" src="" alt="Video Feed">
+                    </div>
+                </div>
+
+                <div class="placeholder" id="placeholder">
+                    <div class="placeholder-icon">
+                        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect class="monitor-body" x="15" y="20" width="90" height="60" rx="6" stroke="#555" stroke-width="3"/>
+                            <line class="monitor-stand" x1="60" y1="80" x2="60" y2="95" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+                            <line class="monitor-base" x1="42" y1="95" x2="78" y2="95" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+                            <path class="flame-path" d="M60 32 C60 32 50 42 50 50 C50 56 54 60 60 60 C66 60 70 56 70 50 C70 42 60 32 60 32Z" stroke="#f97316" stroke-width="2" fill="none"/>
+                            <path class="flame-inner" d="M60 40 C60 40 55 46 55 50 C55 53 57 55 60 55 C63 55 65 53 65 50 C65 46 60 40 60 40Z" stroke="#fbbf24" stroke-width="1.5" fill="none"/>
+                            <circle class="scan-line" cx="60" cy="50" r="25" stroke="#f97316" stroke-width="0.5" opacity="0.3"/>
+                        </svg>
+                    </div>
+                    <p class="placeholder-text">Select a source to start detection</p>
+                </div>
+            </div>
+
+            <div class="right-column">
+                <div class="controls">
+                    <div class="input-group">
+                        <label for="ip-url">
+                            <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>
+                            IP Webcam URL
+                        </label>
+                        <div class="input-wrapper">
+                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                            <input type="text" id="ip-url" value="{{ default_url }}" placeholder="Enter IP Webcam URL">
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button id="btn-ip" class="btn btn-primary">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.53c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.4z"/></svg>
+                            IP Webcam
+                        </button>
+                        <button id="btn-webcam" class="btn btn-secondary">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                            Local Webcam
+                        </button>
+                        <label id="btn-upload-label" class="btn btn-accent">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            Upload Video
+                            <input type="file" id="video-upload" accept="video/*" hidden>
+                        </label>
+                        <button id="btn-stop" class="btn btn-danger">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                            Stop
+                        </button>
+                    </div>
+
+                    <div class="status-bar" id="status-bar">
+                        <span class="status-dot" id="status-dot"></span>
+                        <span class="status-text" id="status-text">Idle</span>
+                    </div>
+                </div>
+
+                <div class="loading-bar" id="loading-bar" style="display:none;">
+                    <div class="loading-spinner"></div>
+                    <span>Connecting to source...</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="footer">
+        <span>Powered by YOLOv26</span>
+        <span class="footer-dot"></span>
+        <span>Smoke & Fire Detection System</span>
+    </footer>
+
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="modal-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <p class="modal-message">The IP Webcam fetched unsuccessfully. Would you like to use the current device's webcam instead?</p>
+            <div class="modal-actions">
+                <button id="modal-yes" class="btn btn-secondary">Yes</button>
+                <button id="modal-no" class="btn btn-danger">No</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
